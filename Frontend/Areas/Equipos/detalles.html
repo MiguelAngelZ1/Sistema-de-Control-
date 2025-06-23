@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalles del Equipo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body style="background: #f4f7fb;">
+  <div class="container py-5" style="max-width: 98vw; width: 100%;">
+    <div class="card shadow-lg p-4 mt-4 border-0" style="border-radius: 18px; background: #fff;">
+      <div class="mb-4 p-3 d-flex align-items-center" style="background: linear-gradient(90deg, #eaf3fb 0%, #f8fbff 100%); border-radius: 12px; font-size: 1.5rem; font-weight: 600;">
+  <i class="fas fa-laptop-code me-2" style="color:#007bff; font-size:1.8rem;"></i>
+  <span style="color:#222;">Detalles del Equipo</span>
+</div>
+      <!-- Formulario para mostrar los detalles del equipo seleccionado -->
+      <form id="detalleEquipoForm">
+        <div class="mb-3 row align-items-center">
+          <label for="nombreEquipo" class="col-sm-3 col-form-label fw-bold"><i class="fas fa-tag me-2 text-primary"></i>Nombre del Equipo</label>
+          <div class="col-sm-9">
+            <input type="text" readonly class="form-control bg-light border-0" id="nombreEquipo">
+          </div>
+        </div>
+        <div class="mb-3 row align-items-center">
+          <label for="marca" class="col-sm-3 col-form-label fw-bold"><i class="fas fa-industry me-2 text-success"></i>Marca</label>
+          <div class="col-sm-9">
+            <input type="text" readonly class="form-control bg-light border-0" id="marca">
+          </div>
+        </div>
+        <div class="mb-3 row align-items-center">
+          <label for="procesador" class="col-sm-3 col-form-label fw-bold"><i class="fas fa-microchip me-2 text-info"></i>Procesador</label>
+          <div class="col-sm-9">
+            <input type="text" readonly class="form-control bg-light border-0" id="procesador">
+          </div>
+        </div>
+        <div class="mb-3 row align-items-center">
+          <label for="memoria" class="col-sm-3 col-form-label fw-bold"><i class="fas fa-memory me-2 text-warning"></i>Memoria</label>
+          <div class="col-sm-9">
+            <input type="text" readonly class="form-control bg-light border-0" id="memoria">
+          </div>
+        </div>
+        <div class="mb-3 row align-items-center">
+          <label for="disco" class="col-sm-3 col-form-label fw-bold"><i class="fas fa-hdd me-2 text-danger"></i>Disco</label>
+          <div class="col-sm-9">
+            <input type="text" readonly class="form-control bg-light border-0" id="disco">
+          </div>
+        </div>
+        <div class="text-end mt-4">
+          <a href="index.html" class="btn btn-secondary px-4 py-2"><i class="fas fa-arrow-left"></i> Volver</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+<script>
+// ===============================
+// MOCK de datos para pruebas
+// ===============================
+// Objeto que simula la base de datos, indexado por INE
+/*
+  Mock de datos: objeto indexado por INE que simula la respuesta de un backend.
+  Para producción, reemplazar este bloque por una llamada real a un backend.
+*/
+const equiposPorINE = {
+  '7021290004045': {
+    nombreEquipo: 'COMPUTADORA PERSONAL ESTANDAR TIPO 1 C/MONITOR 20WHE',
+    marca: 'Dell 442',
+    procesador: 'Intel(R) Core(TM) i5-8500 CPU @ 3.00GHz   3.00 GHz',
+    memoria: '8 GB DDR4',
+    disco: '256 GB SSD'
+  },
+  '7021290004266': {
+    nombreEquipo: 'COMPUTADORA PERSONAL. (NETBOOK) LENOVO THINKBOOK 14',
+    marca: 'Lenovo',
+    procesador: 'Intel i3',
+    memoria: '4 GB DDR3',
+    disco: '500 GB HDD'
+  },
+  '7021290004418': {
+    nombreEquipo: 'COMPUTADORA PERSONAL. EXO - READY D1 - AVANZADA',
+    marca: 'EXO',
+    procesador: 'Intel i5',
+    memoria: '8 GB DDR4',
+    disco: '512 GB SSD'
+  },
+  '7021290004416': {
+    nombreEquipo: 'COMPUTADORA PERSONAL. EXO - READY D1 - ESTANDAR',
+    marca: 'EXO',
+    procesador: 'Intel i3',
+    memoria: '4 GB DDR3',
+    disco: '500 GB HDD'
+  },
+  '702129A000209': {
+    nombreEquipo: 'COMPUTADORA PERSONAL.(NOTEBOOK).MOD CF-31JHGEC-PANASONIC',
+    marca: 'Panasonic',
+    procesador: 'Intel i5',
+    memoria: '8 GB DDR4',
+    disco: '256 GB SSD'
+  },
+  '7025200113126': {
+    nombreEquipo: 'DISCO EXTERNO SEAGATE BACKUP PLUS 4TB',
+    marca: 'Seagate',
+    procesador: '-',
+    memoria: '-',
+    disco: '4 TB'
+  }
+};
+
+/*
+  Script principal:
+  - Lee el parámetro INE desde la URL.
+  - Busca el equipo en el mock de datos.
+  - Llena dinámicamente el formulario.
+  - Incluye bloque comentado para futura integración con backend (fetch).
+*/
+window.onload = function() {
+  // ===============================
+  // 1. Obtener el INE de la URL
+  // ===============================
+  const params = new URLSearchParams(window.location.search);
+  const ine = params.get('INE');
+  if (!ine) return;
+
+  // ===============================
+  // 2. Buscar en el mock de datos
+  // ===============================
+  const data = equiposPorINE[ine];
+  if (!data) return;
+
+  // ===============================
+  // 3. Llenar el formulario con los datos encontrados
+  // ===============================
+  document.getElementById('nombreEquipo').value = data.nombreEquipo;
+  document.getElementById('marca').value = data.marca;
+  document.getElementById('procesador').value = data.procesador;
+  document.getElementById('memoria').value = data.memoria;
+  document.getElementById('disco').value = data.disco;
+
+  // ===============================
+  // 4. Código para uso futuro con backend real (comentado)
+  // ===============================
+  /* 
+  BLOQUE PARA INTEGRACIÓN FUTURA CON BACKEND:
+  Descomentar y adaptar este código cuando el backend REST esté disponible.
+  */
+  /*
+  fetch(`/api/equipos/detalle?INE=${ine}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('nombreEquipo').value = data.nombreEquipo;
+      document.getElementById('marca').value = data.marca;
+      document.getElementById('procesador').value = data.procesador;
+      document.getElementById('memoria').value = data.memoria;
+      document.getElementById('disco').value = data.disco;
+    });
+  */
+};
+// ===============================
+</script>
+</html>

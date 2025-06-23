@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listado de Equipos</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Estilos personalizados -->
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    .btn-agregar {
+      background-color: #198754;
+      color: white;
+      border: none;
+    }
+    .btn-agregar:hover {
+      background-color: #157347;
+      color: white;
+    }
+    .btn-detalle {
+      background-color: #0d6efd;
+      color: white;
+    }
+    .btn-detalle:hover {
+      background-color: #0b5ed7;
+      color: white;
+    }
+    .btn-editar {
+      background-color: #ffc107;
+      color: #000;
+    }
+    .btn-eliminar {
+      background-color: #dc3545;
+      color: white;
+    }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+  <!-- Contenedor principal -->
+  <div id="app" class="d-flex flex-column flex-grow-1">
+    <!-- Barra de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container">
+        <a class="navbar-brand" href="#">Sistema de Control</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="../Home/index.html">
+                <i class="bi bi-house-door me-1"></i>Inicio
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../Grado/index.html">
+                <i class="bi bi-people me-1"></i>Grados
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../Personal/index.html">
+                <i class="bi bi-person-lines-fill me-1"></i>Personal
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../ArmEsp/index.html">
+                <i class="bi bi-shield-check me-1"></i>Armas y Especialidades
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="../Equipos/index.html">
+                <i class="bi bi-laptop me-1"></i>Equipos
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <main class="main-content">
+      <div class="container py-4">
+        <h1 class="h3 mb-3"><i class="bi bi-laptop me-2"></i>Listado de Equipos</h1>
+        
+        <!-- Barra de búsqueda y botón de agregar -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="input-group buscador">
+              <span class="input-group-text"><i class="bi bi-search"></i></span>
+              <input type="text" class="form-control" placeholder="Buscar equipos..." id="buscadorEquipos">
+            </div>
+          </div>
+          <div class="col-md-6 text-end">
+            <button class="btn btn-success btn-agregar">
+              <i class="bi bi-plus-circle me-1"></i>Agregar Equipo
+            </button>
+          </div>
+        </div>
+
+        <!-- Tabla de equipos -->
+        <div class="card shadow-sm mb-4">
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0" id="tablaEquipos">
+                <thead class="table-light">
+                  <tr>
+                    <th class="text-center" style="width: 5%;">#</th>
+                    <th style="width: 30%;">Descripción</th>
+                    <th style="width: 20%;">NNE</th>
+                    <th style="width: 15%;">N° de Serie</th>
+                    <th class="text-center" style="width: 10%;">Estado</th>
+                    <th class="text-center" style="width: 20%;">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Los datos se cargarán dinámicamente -->
+                  <tr>
+                    <td colspan="6" class="text-center py-4">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                      </div>
+                      <p class="mt-2 mb-0">Cargando equipos...</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="footer mt-auto py-3 bg-light">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 text-center">
+            <p class="mb-0">&copy; 2025 Sistema de Control. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modal para ver inventario -->
+  <div class="modal fade" id="modalInventario" tabindex="-1" aria-labelledby="modalInventarioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="modalInventarioLabel">
+            <i class="bi bi-box-seam me-2"></i>Detalle de Inventario
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body p-4" id="contenidoInventario">
+          <!-- El contenido se cargará dinámicamente -->
+        </div>
+      </div>
+    </div>
+  </div>
+            <tr>
+              <td>2</td>
+              <td style="white-space: nowrap;">COMPUTADORA PERSONAL. (NETBOOK) LENOVO THINKBOOK 14</td>
+              <td>7021290004266
+  <i class="fas fa-circle-info text-primary ms-2" style="cursor:pointer; font-size:1.1em;" onclick="event.stopPropagation(); mostrarInventario('7021290004266')" title="Ver inventario"></i>
+</td>
+              <td>-</td>
+              <td><span class="badge bg-danger">F/S</span></td>
+              
+              <td>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Acciones de equipo">
+                  <!-- Botón Detalle: redirige a la página de detalles pasando el INE como parámetro en la URL -->
+                  <button type="button" class="btn btn-detalle" onclick="window.location.href='detalles.html?INE=7021290004266'"><i class="fas fa-eye"></i> Detalle</button>
+                  <button type="button" class="btn btn-editar"><i class="fas fa-edit"></i> Editar</button>
+                  <button type="button" class="btn btn-eliminar"><i class="fas fa-trash-alt"></i> Eliminar</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td style="white-space: nowrap;">COMPUTADORA PERSONAL. EXO - READY D1 - AVANZADA</td>
+              <td>7021290004418
+  <i class="fas fa-circle-info text-primary ms-2" style="cursor:pointer; font-size:1.1em;" onclick="event.stopPropagation(); mostrarInventario('7021290004418')" title="Ver inventario"></i>
+</td>
+              <td>-</td>
+              <td><span class="badge bg-success">E/S</span></td>
+              
+              <td>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Acciones de equipo">
+                  <button type="button" class="btn btn-detalle" onclick="window.location.href='detalles.html?INE=7021290004418'"><i class="fas fa-eye"></i> Detalle</button>
+                  <button type="button" class="btn btn-editar"><i class="fas fa-edit"></i> Editar</button>
+                  <button type="button" class="btn btn-eliminar"><i class="fas fa-trash-alt"></i> Eliminar</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td style="white-space: nowrap;">COMPUTADORA PERSONAL. EXO - READY D1 - ESTANDAR</td>
+              <td>7021290004416
+  <i class="fas fa-circle-info text-primary ms-2" style="cursor:pointer; font-size:1.1em;" onclick="event.stopPropagation(); mostrarInventario('7021290004416')" title="Ver inventario"></i>
+</td>
+              <td>-</td>
+              <td><span class="badge bg-danger">F/S</span></td>
+              
+              <td>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Acciones de equipo">
+                  <button type="button" class="btn btn-detalle" onclick="window.location.href='detalles.html?INE=7021290004416'"><i class="fas fa-eye"></i> Detalle</button>
+                  <button type="button" class="btn btn-editar"><i class="fas fa-edit"></i> Editar</button>
+                  <button type="button" class="btn btn-eliminar"><i class="fas fa-trash-alt"></i> Eliminar</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td style="white-space: nowrap;">COMPUTADORA PERSONAL.(NOTEBOOK).MOD CF-31JHGEC-PANASONIC</td>
+              <td>702129A000209
+  <i class="fas fa-circle-info text-primary ms-2" style="cursor:pointer; font-size:1.1em;" onclick="event.stopPropagation(); mostrarInventario('702129A000209')" title="Ver inventario"></i>
+</td>
+              <td>-</td>
+              <td><span class="badge bg-success">E/S</span></td>
+              
+              <td>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Acciones de equipo">
+                  <button type="button" class="btn btn-detalle" onclick="window.location.href='detalles.html?INE=702129A000209'"><i class="fas fa-eye"></i> Detalle</button>
+                  <button type="button" class="btn btn-editar"><i class="fas fa-edit"></i> Editar</button>
+                  <button type="button" class="btn btn-eliminar"><i class="fas fa-trash-alt"></i> Eliminar</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td style="white-space: nowrap;">DISCO EXTERNO SEAGATE BACKUP PLUS 4TB</td>
+              <td>7025200113126
+  <i class="fas fa-circle-info text-primary ms-2" style="cursor:pointer; font-size:1.1em;" onclick="event.stopPropagation(); mostrarInventario('7025200113126')" title="Ver inventario"></i>
+</td>
+              <td>-</td>
+              <td><span class="badge bg-danger">F/S</span></td>
+              
+              <td>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Acciones de equipo">
+                  <button type="button" class="btn btn-detalle" onclick="window.location.href='detalles.html?INE=7025200113126'"><i class="fas fa-eye"></i> Detalle</button>
+                  <button type="button" class="btn btn-editar"><i class="fas fa-edit"></i> Editar</button>
+                  <button type="button" class="btn btn-eliminar"><i class="fas fa-trash-alt"></i> Eliminar</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+<!-- Modal Bootstrap para mostrar inventario -->
+<div class="modal fade" id="modalInventario" tabindex="-1" aria-labelledby="modalInventarioLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalInventarioLabel">Detalle de Inventario</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body p-4 bg-light" id="contenidoInventario" style="border-radius: 0 0 12px 12px;">
+  <!-- Aquí se llena por JS -->
+</div>
+    </div>
+  </div>
+</div>
+      </div>
+    </div>
+  </div>
+<script>
+// Datos mock de inventario por NNE
+const inventarioMock = {
+  '7021290004045': { cantidad_total: 5, cantidad_en_servicio: 4, cantidad_fuera_servicio: 1 },
+  '7021290004266': { cantidad_total: 3, cantidad_en_servicio: 2, cantidad_fuera_servicio: 1 },
+  '7021290004418': { cantidad_total: 2, cantidad_en_servicio: 2, cantidad_fuera_servicio: 0 },
+  '7021290004416': { cantidad_total: 1, cantidad_en_servicio: 0, cantidad_fuera_servicio: 1 },
+  '702129A000209': { cantidad_total: 4, cantidad_en_servicio: 4, cantidad_fuera_servicio: 0 },
+  '7025200113126': { cantidad_total: 1, cantidad_en_servicio: 0, cantidad_fuera_servicio: 1 }
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+  window.mostrarInventario = function(nne) {
+    const data = inventarioMock[nne];
+    document.getElementById('contenidoInventario').innerHTML = data ? `
+    <div class="text-center mb-3">
+      <i class="fas fa-clipboard-list fa-2x text-primary mb-2"></i>
+      <h5 class="fw-bold mb-1">Resumen de Inventario</h5>
+      <span class="badge bg-secondary mb-2" style="font-size:1rem;">NNE: ${nne}</span>
+    </div>
+    <div class="d-flex flex-column gap-2 align-items-center">
+      <span class="fw-semibold">Cantidad total: <span class="badge bg-primary ms-1">${data.cantidad_total}</span></span>
+      <span class="fw-semibold">En servicio: <span class="badge bg-success ms-1">${data.cantidad_en_servicio}</span></span>
+      <span class="fw-semibold">Fuera de servicio: <span class="badge bg-danger ms-1">${data.cantidad_fuera_servicio}</span></span>
+    </div>
+  ` : '<p class="text-center text-danger">No hay información de inventario para este NNE.</p>';
+    const modalEl = document.getElementById('modalInventario');
+    if (window.bootstrap && bootstrap.Modal) {
+      let modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+      modal.show();
+    } else {
+      modalEl.style.display = 'block';
+    }
+  };
+
+  // Permite hacer click en la fila (excepto en los botones) para ver inventario
+  const filas = document.querySelectorAll('tbody tr');
+  filas.forEach(fila => {
+    fila.style.cursor = 'pointer';
+    fila.addEventListener('click', function(e) {
+      if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+      const nne = this.querySelectorAll('td')[2]?.textContent.trim();
+      if (nne) window.mostrarInventario(nne);
+    });
+  });
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

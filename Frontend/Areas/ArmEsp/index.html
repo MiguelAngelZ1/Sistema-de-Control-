@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Armas y Especialidades - Sistema de Control</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Contenedor principal -->
+    <div id="app" class="d-flex flex-column flex-grow-1">
+    <!-- Barra de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Sistema de Control</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../Home/index.html">
+                            <i class="bi bi-house-door me-1"></i>Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../Grado/index.html">
+                            <i class="bi bi-people me-1"></i>Grados
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../Personal/index.html">
+                            <i class="bi bi-person-lines-fill me-1"></i>Personal
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="../ArmEsp/index.html">
+                            <i class="bi bi-shield-check me-1"></i>Armas y Especialidades
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../Equipos/index.html">
+                            <i class="bi bi-laptop me-1"></i>Equipos
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <div class="container py-4">
+            <h1 class="h3 mb-3"><i class="bi bi-shield-check me-2"></i>Armas y Especialidades</h1>
+            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#agregarArmEspModal">
+                    <i class="bi bi-plus-circle me-1"></i>Agregar
+                </a>
+            </div>
+
+            <!-- Sección de Armas -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-shield me-2"></i>Armas</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="tablaArmas">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Abreviatura</th>
+                                    <th>Nombre Completo</th>
+                                    <th class="text-end">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cuerpoTablaArmas">
+                                <!-- Los datos se cargarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Especialidades -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-stars me-2"></i>Especialidades</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="tablaEspecialidades">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Abreviatura</th>
+                                    <th>Nombre Completo</th>
+                                    <th class="text-end">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cuerpoTablaEspecialidades">
+                                <!-- Los datos se cargarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Agregar/Editar -->
+    <div class="modal fade" id="agregarArmEspModal" tabindex="-1" aria-labelledby="agregarArmEspModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="agregarArmEspModalLabel">
+                        <i class="bi bi-plus-circle me-2"></i>Agregar Nuevo
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formArmEsp" class="needs-validation" novalidate>
+                    <input type="hidden" id="armEspId">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="tipo" class="form-label">
+                                <i class="bi bi-tag-fill me-1 text-primary"></i>Tipo
+                            </label>
+                            <select class="form-select" id="tipo" required>
+                                <option value="" disabled selected>Seleccione un tipo</option>
+                                <option value="Arma">Arma</option>
+                                <option value="Especialidad">Especialidad</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Por favor seleccione un tipo
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">
+                                <i class="bi bi-card-heading me-1 text-primary"></i>Nombre
+                            </label>
+                            <input type="text" class="form-control" id="nombre" required>
+                            <div class="invalid-feedback">
+                                Por favor ingrese un nombre
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">
+                                <i class="bi bi-card-text me-1 text-primary"></i>Descripción
+                            </label>
+                            <textarea class="form-control" id="descripcion" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle me-1"></i>Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btnGuardar">
+                            <i class="bi bi-save me-1"></i>Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmar Eliminación -->
+    <div class="modal fade" id="confirmarEliminarModal" tabindex="-1" aria-labelledby="confirmarEliminarModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="confirmarEliminarModalLabel">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmar Eliminación
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <div class="mb-3">
+                        <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="mb-3">¿Está seguro que desea eliminar este registro?</h5>
+                    <p class="text-muted">Esta acción no se puede deshacer y se eliminarán todos los datos asociados.</p>
+                    <input type="hidden" id="idEliminar">
+                    <input type="hidden" id="tipoEliminar">
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">
+                        <i class="bi bi-trash-fill me-1"></i>Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para ver detalles -->
+    <div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="detalleModalLabel">
+                        <i class="bi bi-info-circle me-2"></i>Detalles
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-4 text-center">
+                        <div class="bg-soft-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <i class="bi bi-shield-check text-primary" style="font-size: 2.5rem;"></i>
+                        </div>
+                        <h4 id="detalleNombre" class="mb-1"></h4>
+                        <span class="badge bg-primary" id="detalleTipo"></span>
+                    </div>
+                    
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0"><i class="bi bi-card-text me-2"></i>Descripción</h6>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-0" id="detalleDescripcion">Sin descripción disponible</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Información Adicional</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6 mb-2">
+                                    <p class="text-muted mb-1">Tipo</p>
+                                    <p class="mb-0 fw-medium" id="detalleTipo2"></p>
+                                </div>
+                                <div class="col-6 mb-2">
+                                    <p class="text-muted mb-1">Estado</p>
+                                    <span class="badge bg-success">Activo</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg me-1"></i>Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pie de página -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="mb-0">&copy; 2025 Sistema de Control. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts de Bootstrap y personalizados -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../../js/ArmEsp.js"></script>
+</body>
+</html>
